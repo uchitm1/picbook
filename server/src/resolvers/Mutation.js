@@ -65,10 +65,34 @@ const createPost = async (_parent, args, context) => {
 	return post;
 };
 
+const likePost = async (_parent, args, context) => {
+	const isLiked = await context.prisma.like.findUnique({
+		where: {
+			postId_userId: {
+				postId: parseInt(args.postId),
+				userId: context.req.session.userId,
+			},
+		},
+	});
+	if (isLiked) {
+		throw new Error("Already liked the post");
+	}
+
+	const newLike = await context.prisma.like.create({
+		data: {
+			user: { connect: { id: context.req.session.userId } },
+			post: { connect: { id: parseInt(args.postId) } },
+		},
+	});
+
+	return newLike;
+};
+
 module.exports = {
 	registerUser,
 	loginUser,
 	logoutUser,
 	currentUser,
 	createPost,
+	likePost,
 };

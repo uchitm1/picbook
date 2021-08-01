@@ -29,6 +29,9 @@ const post = async (_parent, args, context) => {
 const postsByUserId = async (_parent, _args, context) => {
 	const posts = await context.prisma.post.findMany({
 		where: { createdById: parseInt(context.req.session.userId) },
+		orderBy: {
+			createdAt: "desc",
+		},
 	});
 	return posts;
 };

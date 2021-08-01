@@ -1,9 +1,21 @@
+import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { BsFillHeartFill } from "react-icons/bs";
+import { likePostMutation } from "../graphql/mutations/like";
+import { currentUserMutation } from "../graphql/mutations/user";
+import { postsQuery } from "../graphql/queries/post";
 
 function Post(props) {
 	const { post } = props;
+	const [userLoggedIn, setUserLoggedIn] = useState("");
 	const [isPortrait, setIsPortrait] = useState(null);
+	const [likePost] = useMutation(likePostMutation, {
+		variables: {
+			likedPostId: post.id,
+		},
+		refetchQueries: [{ query: postsQuery }],
+	});
+	const [currentUser] = useMutation(currentUserMutation);
 
 	useEffect(() => {
 		const image = document.createElement("img");
@@ -13,7 +25,16 @@ function Post(props) {
 		} else {
 			setIsPortrait(true);
 		}
+		const getCurrentUser = async () => {
+			const user = await currentUser();
+			setUserLoggedIn(user.data.currentUser);
+		};
+		getCurrentUser();
 	}, []);
+
+	const handleLikePost = () => {
+		likePost();
+	};
 
 	return (
 		<div
@@ -37,7 +58,12 @@ function Post(props) {
 			<div className="absolute bottom-3 inset-x-1/2">
 				<BsFillHeartFill
 					size={20}
-					className="text-black text-opacity-50 cursor-pointer transition duration-300 ease-in transform hover:text-red-400 hover:scale-125"
+					onClick={handleLikePost}
+					className={
+						post.likes.some((like) => like.user.id === userLoggedIn.id)
+							? "text-red-400 cursor-pointer"
+							: "text-black text-opacity-50 cursor-pointer transition duration-300 ease-in transform hover:text-red-400 hover:scale-125"
+					}
 				/>
 			</div>
 		</div>

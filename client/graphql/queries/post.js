@@ -12,6 +12,11 @@ export const postsQuery = gql`
 				fullName
 				imageUrl
 			}
+			likes {
+				user {
+					id
+				}
+			}
 		}
 	}
 `;
@@ -24,6 +29,11 @@ export const postsByUserIdQuery = gql`
 			description
 			createdAt
 			updatedAt
+			likes {
+				user {
+					id
+				}
+			}
 		}
 	}
 `;

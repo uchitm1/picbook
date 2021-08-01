@@ -13,6 +13,7 @@ const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");
 const User = require("./resolvers/User");
 const Post = require("./resolvers/Post");
+const Like = require("./resolvers/Like");
 
 const main = async () => {
 	const app = express();
@@ -53,6 +54,7 @@ const main = async () => {
 			Mutation,
 			User,
 			Post,
+			Like,
 		},
 		context: ({ req, res }) => {
 			return {

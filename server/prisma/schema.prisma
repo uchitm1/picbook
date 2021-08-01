@@ -19,6 +19,7 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   posts       Post[]
+  likes       Like[]
 }
 
 model Post {
@@ -29,4 +30,23 @@ model Post {
   updatedAt   DateTime @default(now())
   createdBy   User     @relation(fields: [createdById], references: [id])
   createdById Int
+  likes       Like[]
 }
+
+model Like {
+  id          Int       @id @default(autoincrement())
+  post        Post      @relation(fields: [postId], references: [id])
+  postId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+
+  @@unique([postId, userId])
+}
+
+// model session {
+//   sid         String    @id
+//   sess        Json
+//   expire      DateTime
+
+//   @@index([expire])
+// }
