@@ -1,0 +1,56 @@
+scalar Date
+
+type Query {
+	users: [User!]!
+	user(id: ID!): User
+
+	posts: [Post!]!
+	post(id: ID!): Post
+	postsByUserId: [Post]
+}
+
+type Mutation {
+	registerUser(user: UserSignupInput!): User
+	loginUser(user: UserLoginInput!): User
+	logoutUser: Boolean!
+	currentUser: User
+
+	createPost(post: CreatePostInput!): Post
+}
+
+type User {
+	id: ID!
+	fullName: String!
+	username: String!
+	password: String!
+	imageUrl: String
+	createdAt: Date!
+	updatedAt: Date!
+	posts: [Post!]!
+}
+
+type Post {
+	id: ID!
+	imageUrl: String!
+	description: String
+	createdAt: Date!
+	updatedAt: Date!
+	createdBy: User!
+}
+
+input UserSignupInput {
+	fullName: String!
+	username: String!
+	password: String!
+	imageUrl: String
+}
+
+input UserLoginInput {
+	username: String!
+	password: String!
+}
+
+input CreatePostInput {
+	imageUrl: String!
+	description: String
+}
